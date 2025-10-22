@@ -1,0 +1,21 @@
+{
+  "name": "dfs-projections",
+  "version": "1.0.0",
+  "description": "NFL DFS projections based on betting odds",
+  "scripts": {
+    "install-all": "yarn install && cd server && yarn install && cd ../client && yarn install",
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "server": "cd server && yarn dev",
+    "client": "cd client && yarn dev",
+    "mongo:start": "docker-compose up -d",
+    "mongo:stop": "docker-compose down",
+    "mongo:logs": "docker-compose logs -f mongodb"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
