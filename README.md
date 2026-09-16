@@ -4,7 +4,6 @@ A full-stack application for generating NFL Daily Fantasy Sports projections bas
 
 ## Features
 
-- **Player Odds**: Fetches NFL player prop betting data from The Odds API
 - **Player Prices**: Retrieves DFS pricing data from Fantasy Nerds API (FanDuel & Yahoo)
 - **Player Projections**: Generates fantasy point projections by combining odds and pricing data
 
@@ -14,7 +13,6 @@ A full-stack application for generating NFL Daily Fantasy Sports projections bas
 - **Backend**: Express.js + Node.js
 - **Database**: MongoDB
 - **APIs**: 
-  - The Odds API (https://the-odds-api.com)
   - Fantasy Nerds API (https://api.fantasynerds.com)
 
 ## Prerequisites
@@ -90,22 +88,15 @@ yarn client         # Run frontend only
 
 ## Usage
 
-1. **Fetch Odds**: Click the "Fetch Odds" button to pull the latest NFL player prop betting data from The Odds API. This will populate the `player_odds` collection.
+1. **Fetch Prices**: Click the "Fetch Prices" button to retrieve DFS pricing data for FanDuel and Yahoo platforms. This will populate the `player_prices` collection.
 
-2. **Fetch Prices**: Click the "Fetch Prices" button to retrieve DFS pricing data for FanDuel and Yahoo platforms. This will populate the `player_prices` collection.
+2. **Generate Projections**: Click the "Generate Projections" button to associate players from both datasets and calculate fantasy point projections. This will populate the `player_projections` collection.
 
-3. **Generate Projections**: Click the "Generate Projections" button to associate players from both datasets and calculate fantasy point projections. This will populate the `player_projections` collection.
-
-4. **View Data**: Use the dropdown menu to switch between:
-   - Player Odds
+3. **View Data**: Use the dropdown menu to switch between:
    - Player Prices
    - Player Projections
 
 ## API Endpoints
-
-### Player Odds
-- `POST /api/odds/fetch` - Fetch odds from The Odds API
-- `GET /api/odds` - Get all stored odds
 
 ### Player Prices
 - `POST /api/prices/fetch` - Fetch prices from Fantasy Nerds API
@@ -118,10 +109,11 @@ yarn client         # Run frontend only
 ## Database Collections
 
 ### player_odds
-Stores betting lines and odds for various player props:
-- Rush attempts, yards, TDs
-- Receptions, receiving yards, TDs
-- Pass attempts, yards, TDs
+Stores betting lines and odds for various player props — rush attempts/yards/TDs,
+receptions, receiving yards, pass attempts/yards/TDs. **Nothing populates this
+collection any more**: the The Odds API fetch route was removed on 2026-09-16
+when that subscription was cancelled. The projection calculator still reads the
+existing rows, so projections now only ever run over pre-existing odds.
 
 ### player_prices
 Stores DFS pricing data:
@@ -165,7 +157,7 @@ yarn mongo:start
 
 ## Important Notes
 
-- **API Rate Limits**: Both external APIs have usage limits. Use the fetch buttons judiciously.
+- **API Rate Limits**: The external API (Fantasy Nerds) has usage limits. Use the fetch buttons judiciously.
 - **Data Freshness**: Betting odds and DFS prices change frequently. Fetch data close to game time for best accuracy.
 - **Player Matching**: Player association is done by name matching, which may occasionally miss matches due to name formatting differences.
 
