@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import oddsRoutes from './routes/odds.js';
 import pricesRoutes from './routes/prices.js';
 import projectionsRoutes from './routes/projections.js';
 
@@ -21,7 +20,6 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
-app.use('/api/odds', oddsRoutes);
 app.use('/api/prices', pricesRoutes);
 app.use('/api/projections', projectionsRoutes);
 

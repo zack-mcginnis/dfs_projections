@@ -3,7 +3,7 @@ import axios from 'axios'
 import './App.css'
 
 function App() {
-  const [selectedView, setSelectedView] = useState('player_odds')
+  const [selectedView, setSelectedView] = useState('player_prices')
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [fetchingData, setFetchingData] = useState(false)
@@ -22,9 +22,6 @@ function App() {
       let endpoint = ''
       
       switch (selectedView) {
-        case 'player_odds':
-          endpoint = '/api/odds'
-          break
         case 'player_prices':
           endpoint = '/api/prices'
           break
@@ -32,7 +29,7 @@ function App() {
           endpoint = '/api/projections'
           break
         default:
-          endpoint = '/api/odds'
+          endpoint = '/api/prices'
       }
       
       const response = await axios.get(endpoint)
@@ -42,26 +39,6 @@ function App() {
       setMessage('Error loading data: ' + error.message)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchOdds = async () => {
-    setFetchingData(true)
-    setMessage('Fetching odds from The Odds API... This may take a minute.')
-    
-    try {
-      const response = await axios.post('/api/odds/fetch')
-      setMessage(response.data.message + ` (${response.data.count} players)`)
-      
-      // Reload data if we're viewing odds
-      if (selectedView === 'player_odds') {
-        await loadData()
-      }
-    } catch (error) {
-      console.error('Error fetching odds:', error)
-      setMessage('Error fetching odds: ' + error.message)
-    } finally {
-      setFetchingData(false)
     }
   }
 
@@ -115,8 +92,6 @@ function App() {
     }
 
     switch (selectedView) {
-      case 'player_odds':
-        return renderOddsTable()
       case 'player_prices':
         return renderPricesTable()
       case 'player_projections':
@@ -125,38 +100,6 @@ function App() {
         return <div>Select a view</div>
     }
   }
-
-  const renderOddsTable = () => (
-    <div className="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Player Name</th>
-            <th>Game</th>
-            <th>Markets</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((player, idx) => (
-            <tr key={idx}>
-              <td>{player.playerName}</td>
-              <td>{player.game}</td>
-              <td>
-                <div className="markets">
-                  {player.markets.map((market, midx) => (
-                    <div key={midx} className="market-item">
-                      <strong>{market.marketType.replace('player_', '').replace('_', ' ')}:</strong>{' '}
-                      Line: {market.line}, Over: {market.overOdds}, Under: {market.underOdds} ({market.bookmaker})
-                    </div>
-                  ))}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
 
   const renderPricesTable = () => (
     <div className="table-container">
@@ -237,20 +180,12 @@ function App() {
             value={selectedView} 
             onChange={(e) => setSelectedView(e.target.value)}
           >
-            <option value="player_odds">Player Odds</option>
             <option value="player_prices">Player Prices</option>
             <option value="player_projections">Player Projections</option>
           </select>
         </div>
 
         <div className="fetch-buttons">
-          <button 
-            onClick={fetchOdds} 
-            disabled={fetchingData}
-            className="fetch-btn"
-          >
-            Fetch Odds
-          </button>
           <button 
             onClick={fetchPrices} 
             disabled={fetchingData}
